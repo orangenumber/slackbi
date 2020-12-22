@@ -1,0 +1,28 @@
+{
+   "module": {
+      "interface_version": 1,
+      "entry_point": "main.py"
+   },
+   "info": {
+      "name": "blahblah1",
+      "version": "0.0.1",
+      "created": "2020-10-10 12:13:14",
+      "last-modified": "2020-10-10 12:13:14",
+      "contacts": [
+         "gonyi",
+         "gon yi"
+      ]
+   },
+   "help": {
+      "intro": "this does blah blah",
+      "website": "http://gonyyi.com",
+      "help": [
+         "this is blah blah",
+         "and blah blah line2"
+      ],
+      "usage": [
+         "abc: def",
+         "abc2: def2"
+      ]
+   }
+}
