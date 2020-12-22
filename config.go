@@ -23,10 +23,11 @@ type config struct {
 		ToStdOut bool   `json:"to_std_out,omitempty"`
 	} `json:"logging"`
 	Service struct {
-		Address   string `json:"address"`
-		Port      int    `json:"port"`
-		Path      string `json:"path"`
-		ModuleDir string `json:"module_directory"`
+		Address        string `json:"address"`
+		Port           int    `json:"port"`
+		Path           string `json:"path"`
+		ModuleDir      string `json:"module_directory"`
+		AcceptChallege bool   `json:"accept_challenge"` // this is one time URL verification from slack. (https://api.slack.com/events/url_verification)
 	} `json:"service"`
 }
 
@@ -80,6 +81,7 @@ func NewConfig() *config {
 		BotVersion: fmt.Sprintf("%s (%s)", DEFAULT_BOT_VERSION, time.Now().Format("2006-01-02 15:04:05")),
 	}
 	c.Service.Port = DEFAULT_SERVICE_PORT
+
 	c.Service.ModuleDir = DEFAULT_SERVICE_MODULE_DIR
 	c.Service.Path = DEFAULT_SERVICE_PATH
 	c.LogToStdErr()

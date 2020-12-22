@@ -26,7 +26,7 @@ func New(c config) *SlackBot {
 		config: c,
 	}
 	if c.Logging.Enable {
-		b.logger = alog.New(c.Logging.output, "sbi ", alog.FDefault|alog.FDateYYYYMMDD|alog.FPrefix)
+		b.logger = alog.New(c.Logging.output, "sbi ", alog.FDefault|alog.FDateYYYYMMDD|alog.FPrefix|alog.FLevelTrace)
 	} else {
 		b.logger = &aninterface.DummyLogger1a{} // to prevent null ptr error
 	}
@@ -44,11 +44,12 @@ func New(c config) *SlackBot {
 		b.logger.Warnf("Invalid service path (%s) -> using (%s) instead", b.config.Service.Path, newPath)
 		b.config.Service.Path = newPath
 	}
+
 	return b
 }
 
 func (b *SlackBot) Run() error {
 	b.logger.Infof("Serving HTTP %s:%d%s", b.config.Service.Address, b.config.Service.Port, b.config.Service.Path)
-
+	b.serve()
 	return nil
 }
