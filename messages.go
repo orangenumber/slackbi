@@ -128,7 +128,14 @@ func (in *MsgIncoming) Response(sbi *SBI, module string, response *MsgOutgoing) 
 			if err := out.SendFile(sbi, v, f); err != nil {
 				return err
 			}
+			if err = os.Remove(file); err != nil {
+				sbi.logger.Errorf("uploaded but failed to delete, file=%s", file)
+			} else {
+				sbi.logger.Debugf("uploaded and deleted, file=%s", file)
+			}
+
 		}
+
 	} else {
 		out.Send(sbi)
 	}
