@@ -2,7 +2,7 @@ package module
 
 import (
 	"fmt"
-	"github.com/gonyyi/aFace/logger"
+	"github.com/gonyyi/aface/logger"
 	"io/ioutil"
 	"os"
 	"path"
@@ -51,7 +51,7 @@ type Modules struct {
 }
 
 // IsExist check for a directory
-func (m *Modules) IsExist(moduleName string) (bool) {
+func (m *Modules) IsExist(moduleName string) bool {
 	fileinfo, err := os.Stat(path.Join(m.ModuleDir, moduleName))
 	if err != nil {
 		return false

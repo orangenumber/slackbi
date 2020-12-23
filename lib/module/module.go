@@ -9,6 +9,7 @@ type Module struct {
 	Module struct {
 		InterfaceVersion int    `json:"interface_version"`
 		EntryPoint       string `json:"entry_point"`
+		AvgRuntimeSec    int    `json:"avg_runtime_sec"`
 	} `json:"module"`
 	Info struct {
 		Name         string   `json:"name"`

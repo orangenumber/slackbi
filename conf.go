@@ -2,7 +2,7 @@ package slackbi
 
 import (
 	"encoding/json"
-	aface "github.com/gonyyi/aFace/logger"
+	logface "github.com/gonyyi/aface/logger"
 	"io/ioutil"
 )
 
@@ -11,7 +11,7 @@ type config struct {
 	BotVersion string `json:"bot_version"`
 	BotName    string `json:"bot_name"`
 	Logging    bool   `json:"logging"`
-	logger     aface.Logger1a
+	logger     logface.Logger1a
 	Service    struct {
 		Address        string `json:"address"`
 		Port           string `json:"port"`

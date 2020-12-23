@@ -50,10 +50,15 @@ type MsgIncoming struct {
 		BotID       string     `json:"bot_id"`
 	} `json:"event,omitempty"`
 	Type         string   `json:"type,omitempty"`          // "event_callback",
+	Challenge    string   `json:"challenge,omitempty"`     // this is only for slack API's challenge
 	EventID      string   `json:"event_id,omitempty"`      // "Ev01BBQ6GCMD",
 	EventTime    int64    `json:"event_time,omitempty"`    // 1601562074,
 	AuthedUsers  []string `json:"authed_users,omitempty"`  // ["U0151J9KL3U"],
 	EventContext string   `json:"event_context,omitempty"` // "1-message-TCVUCDDDY-D015QGYPV0F"
+}
+
+func (in *MsgIncoming) JSON() ([]byte, error) {
+	return json.Marshal(in)
 }
 
 func (in *MsgIncoming) Text() string {
@@ -62,7 +67,13 @@ func (in *MsgIncoming) Text() string {
 func (in *MsgIncoming) TextRaw() string {
 	return in.Event.Text
 }
-
+func (in *MsgIncoming) OutgoingMsg(sbi *SBI) MsgOutgoing {
+	return MsgOutgoing{
+		Token:    sbi.config.SlackToken,
+		Channel:  in.Event.Channel,
+		ThreadTs: in.Event.TS,
+	}
+}
 func (in *MsgIncoming) ResponseText(sbi *SBI, useThread bool, text string) error {
 	var out MsgOutgoing
 	out.Token = sbi.config.SlackToken
@@ -71,6 +82,17 @@ func (in *MsgIncoming) ResponseText(sbi *SBI, useThread bool, text string) error
 		out.ThreadTs = in.Event.TS
 	}
 	out.Text = text
+	return out.Send(sbi)
+}
+
+func (in *MsgIncoming) ResponseMarkdown(sbi *SBI, useThread bool, text string) error {
+	var out MsgOutgoing
+	out.Token = sbi.config.SlackToken
+	out.Channel = in.Event.Channel
+	if useThread {
+		out.ThreadTs = in.Event.TS
+	}
+	out.Blocks.AddMarkdown(text)
 	return out.Send(sbi)
 }
 
@@ -123,10 +145,14 @@ type MsgOutgoing struct {
 	ThreadTs    string          `json:"thread_ts,omitempty"` // "1601562074.000300"
 	Text        string          `json:"text,omitempty"`      // "did you just say `hello`",
 	Attachments []MsgAttachment `json:"attachments,omitempty"`
-	Blocks      []MsgBlock      `json:"blocks,omitempty"`
+	Blocks      MsgBlocks       `json:"blocks,omitempty"`
 	Custom      MsgCustom       `json:"custom,omitmepty"`
 }
 
+func (out *MsgOutgoing) JSON() []byte {
+	payload, _ := json.Marshal(out)
+	return payload
+}
 func (out *MsgOutgoing) Send(sbi *SBI) error {
 	payload, err := json.Marshal(out)
 	if err != nil {
@@ -198,12 +224,33 @@ type MsgAttachment struct {
 	Footer     string     `json:"footer,omitempty"`      // Slack API",
 	FooterIcon string     `json:"footer_icon,omitempty"` // https://platform.slack-edge.com/img/default_application_icon.png",
 	Ts         int64      `json:"ts,omitempty"`          // 123456789
-	Blocks     []MsgBlock `json:"blocks,omitempty"`
+	Blocks     MsgBlocks  `json:"blocks,omitempty"`
 }
 
 // ====================================================================
 // MSG BLOCK
 // ====================================================================
+type MsgBlocks []MsgBlock
+
+func (blo *MsgBlocks) AddMarkdown(markdown string) {
+	*blo = append(*blo, MsgBlock{
+		Type: "section",
+		Text: &MsgText{
+			Type: "mrkdwn",
+			Text: markdown,
+		},
+	})
+}
+func (blo *MsgBlocks) AddDivider() {
+	*blo = append(*blo, MsgBlock{Type: "divider"})
+}
+func (blo *MsgBlocks) AddContext(msgEle ...MsgElement) {
+	*blo = append(*blo, MsgBlock{
+		Type:     "context",
+		Elements: msgEle,
+	})
+}
+
 type MsgBlock struct {
 	Type      string        `json:"type,omitempty"`
 	BlockID   string        `json:"block_id,omitempty"` // "D7US",
@@ -241,13 +288,26 @@ type MsgAccessory struct {
 }
 
 type MsgElement struct {
-	Type        string  `json:"type,omitempty"`
-	Placeholder MsgText `json:"placeholder,omitempty"`
-	ActionID    string  `json:"action_id,omitempty"`
+	Type        string   `json:"type,omitempty"`
+	Text        string   `json:"text,omitempty"`
+	ImageURL    string   `json:"image_url,omitempty"`
+	AltText     string   `json:"alt_text,omitempty"`
+	Placeholder *MsgText `json:"placeholder,omitempty"`
+	ActionID    string   `json:"action_id,omitempty"`
 	Options     []struct {
 		Text  MsgText `json:"text,omitempty"`
 		Value string  `json:"value,omitempty"`
 	} `json:"options,omitempty"`
+}
+
+func (me *MsgElement) AsImage(imageURL, altText string) {
+	me.Type = "image"
+	me.ImageURL = imageURL
+	me.AltText = altText
+}
+func (me *MsgElement) AsMarkdown(markdown string) {
+	me.Type = "mrkdwn"
+	me.Text = markdown
 }
 
 // ====================================================================

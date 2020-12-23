@@ -2,13 +2,15 @@ package slackbi
 
 import (
 	"fmt"
-	aface "github.com/gonyyi/aFace/logger"
+	aface "github.com/gonyyi/aface/logger"
 	"github.com/gonyyi/aninterface"
+	"github.com/orangenumber/slackbi/lib/module"
 )
 
 type SBI struct {
-	config *config
-	logger aninterface.Logger1a
+	config  *config
+	logger  aninterface.Logger1a
+	modules *module.Modules
 }
 
 const (
@@ -40,6 +42,13 @@ func New(c *config, logger aface.Logger1a) (*SBI, error) {
 }
 
 func (b *SBI) Run() error {
+	{
+		m, err := module.NewModules(b.logger, b.config.Module.Dir, b.config.Module.Conf)
+		if err != nil {
+			return err
+		}
+		b.modules = m
+	}
 	b.logger.Infof("Serving HTTP <%s%s%s>", b.config.Service.Address, b.config.Service.Port, b.config.Service.Path)
 	return b.serve()
 }
