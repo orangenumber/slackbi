@@ -3,13 +3,12 @@ package slackbi
 import (
 	"fmt"
 	aface "github.com/gonyyi/aface/logger"
-	"github.com/gonyyi/aninterface"
 	"github.com/orangenumber/slackbi/lib/module"
 )
 
 type SBI struct {
 	config  *config
-	logger  aninterface.Logger1a
+	logger  aface.Logger1a
 	modules *module.Modules
 }
 
