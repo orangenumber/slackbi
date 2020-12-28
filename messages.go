@@ -108,8 +108,8 @@ func (in *MsgIncoming) Response(sbi *SBI, module string, response *MsgOutgoing) 
 	out.Attachments = response.Attachments
 	out.Blocks = response.Blocks
 
-	if (out.Blocks == nil || len(out.Blocks) == 0) && out.Attachments == nil && out.Text == "" {
-		if len(response.Custom.Files) == 0 {
+	if (out.Blocks == nil || len(out.Blocks) == 0) && out.Attachments == nil {
+		if len(response.Custom.Files) == 0 && out.Text == "" {
 			sbi.logger.Warnf("response doesn't have any message, incomingMsg.TS=%s", in.Event.TS)
 			return fmt.Errorf("response doesn't have any message, incomingMsg.TS=%s", in.Event.TS)
 		}
@@ -133,7 +133,6 @@ func (in *MsgIncoming) Response(sbi *SBI, module string, response *MsgOutgoing) 
 			} else {
 				sbi.logger.Debugf("uploaded and deleted, file=%s", file)
 			}
-
 		}
 
 	} else {
