@@ -2,6 +2,7 @@ package slackbi
 
 import (
 	"encoding/json"
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -61,30 +62,45 @@ func (b *SBI) command(in MsgIncoming) {
 			// module 2 is default
 			jIn, err := in.JSON()
 			if err != nil {
+				b.logger.Tracef("in.JSON() failed, err=", err.Error())
 				oops(err)
 				return
 			}
 			output, outputError, err := module.ExecV2(jIn)
 			if err != nil {
+				b.logger.Tracef("module.ExecV2() failed, err=%s, output=%s", err.Error(), string(output))
 				oops(err)
 				return
 			}
+
+			b.logger.Tracef("received from ExecV2(), data=%s", string(output))
+
 			if len(output) > 0 {
 				var tmpMO MsgOutgoing
 				if err := json.Unmarshal(output, &tmpMO); err != nil {
+					b.logger.Tracef("Unmarshal output to MsgOutgoing failed, err=%s, output=%s", err.Error(), string(output))
 					oops(err)
 					return
 				}
 				if err := in.Response(b, moduleName, &tmpMO); err != nil {
+					b.logger.Tracef("in.Response() failed, err=%s, output=%s", err.Error(), string(output))
 					oops(err)
 					return
 				}
+			} else {
+				b.logger.Tracef("no stdout received, stdout.size=%d, stderr.size=%d", len(output), len(outputError))
 			}
 
 			if len(outputError) > 0 {
 				in.ResponseMarkdown(b, false, "*Error:* ```"+string(outputError)+"```")
 			}
 		}
+	} else {
+		b.Help(&in)
 	}
+}
 
+
+func (b *SBI) Help(in *MsgIncoming) {
+	in.ResponseText(b, false, fmt.Sprintf("Sorry. <%s> is an unknown command or a module", in.Text()))
 }
