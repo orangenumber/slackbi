@@ -2,7 +2,7 @@ package module
 
 import (
 	"fmt"
-	"github.com/gonyyi/aface/logger"
+	"github.com/gonyyi/aface"
 	"io/ioutil"
 	"os"
 	"path"
@@ -39,7 +39,7 @@ func NewModules(logger aface.Logger1a, dir string, confName string) (*Modules, e
 	if logger != nil {
 		m.logger = logger
 	} else {
-		m.logger = &aface.DummyLogger1a{}
+		m.logger = &aface.LoggerDummy1a{}
 	}
 	return m, nil
 }

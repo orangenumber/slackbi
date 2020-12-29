@@ -2,7 +2,7 @@ package slackbi
 
 import (
 	"fmt"
-	aface "github.com/gonyyi/aface/logger"
+	"github.com/gonyyi/aface"
 	"github.com/orangenumber/slackbi/lib/module"
 )
 
@@ -29,7 +29,7 @@ func New(c *config, logger aface.Logger1a) (*SBI, error) {
 	if c.Logging && logger != nil {
 		b.logger = logger
 	} else {
-		b.logger = &aface.DummyLogger1a{} // to prevent null ptr error
+		b.logger = &aface.LoggerDummy1a{} // to prevent null ptr error
 	}
 
 	b.logger.Infof("SlackBotInterface %s", SBI_VERSION)
