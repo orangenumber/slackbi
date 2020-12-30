@@ -2,8 +2,6 @@ package slackbi
 
 import (
 	"encoding/json"
-	"fmt"
-	"strconv"
 	"strings"
 )
 
@@ -15,9 +13,9 @@ func (b *SBI) command(in MsgIncoming) {
 	txt := in.Text()
 
 	oops := func(err error) {
-		b.logger.Errorf("ERR-001: err=%s", err.Error())
-		if err = in.ResponseText(b, false, "ERR-001: problem with the module."); err != nil {
-			b.logger.Errorf("ERR-002: *MsgIncoming.ResponseText(), err=%s", err.Error())
+		b.logger.Errorf(MF_MOD_ERR_001_SErr.Format(err.Error()))
+		if err = in.ResponseText(b, false, M_MOD_ERR_001.String()); err != nil {
+			b.logger.Errorf(MF_MOD_ERR_002_SErr.Format(err.Error()))
 		}
 	}
 
@@ -36,7 +34,8 @@ func (b *SBI) command(in MsgIncoming) {
 			module.Module.AvgRuntimeSec = 1
 		}
 		if module.Module.AvgRuntimeSec > 5 {
-			in.ResponseText(b, false, "Wait.. average runtime for this module is "+strconv.Itoa(module.Module.AvgRuntimeSec)+" seconds.")
+			in.ResponseText(b, false,
+				MF_MOD_DELAYED_RESP_SAvgSec.Format(module.Module.AvgRuntimeSec))
 		}
 
 		switch module.Module.InterfaceVersion {
@@ -55,40 +54,40 @@ func (b *SBI) command(in MsgIncoming) {
 				tmpME.AsMarkdown("```" + string(outputError) + "```")
 				outmsg.Blocks.AddContext(tmpME)
 				outmsg.Send(b)
-				b.logger.Tracef("output=%s", string(outmsg.JSON()))
+				b.logger.Tracef(MF_MOD_OUTPUT_SData.Format(string(outmsg.JSON())))
 			}
 
 		default:
 			// module 2 is default
 			jIn, err := in.JSON()
 			if err != nil {
-				b.logger.Tracef("in.JSON() failed, err=", err.Error())
+				b.logger.Tracef(MF_MOD_ERR_JSON_SErr.Format(err.Error()))
 				oops(err)
 				return
 			}
 			output, outputError, err := module.ExecV2(jIn)
 			if err != nil {
-				b.logger.Tracef("module.ExecV2() failed, err=%s, output=%s", err.Error(), string(output))
+				b.logger.Tracef(MF_MOD_EXEC_V2_FAILED_SErr_SOutput.Format(err.Error(), string(output)))
 				oops(err)
 				return
 			}
 
-			b.logger.Tracef("received from ExecV2(), data=%s", string(output))
+			b.logger.Tracef(MF_MOD_EXEC_V2_OK_SData.Format(string(output)))
 
 			if len(output) > 0 {
 				var tmpMO MsgOutgoing
 				if err := json.Unmarshal(output, &tmpMO); err != nil {
-					b.logger.Tracef("Unmarshal output to MsgOutgoing failed, err=%s, output=%s", err.Error(), string(output))
+					b.logger.Tracef(MF_MOD_EXEC_V2_UNMARHSAL_FAILED_SErr_SOutput.Format(err.Error(), string(output)))
 					oops(err)
 					return
 				}
 				if err := in.Response(b, moduleName, &tmpMO); err != nil {
-					b.logger.Tracef("in.Response() failed, err=%s, output=%s", err.Error(), string(output))
+					b.logger.Tracef(MF_MOD_EXEC_V2_RESP_FAILED_SErr_SOutput.Format(err.Error(), string(output)))
 					oops(err)
 					return
 				}
 			} else {
-				b.logger.Tracef("no stdout received, stdout.size=%d, stderr.size=%d", len(output), len(outputError))
+				b.logger.Tracef(MF_MOD_EXEC_V2_STDOUT_EMPTY_IStdoutSize_IStderrSize.Format(len(output), len(outputError)))
 			}
 
 			if len(outputError) > 0 {
@@ -100,7 +99,6 @@ func (b *SBI) command(in MsgIncoming) {
 	}
 }
 
-
 func (b *SBI) Help(in *MsgIncoming) {
-	in.ResponseText(b, false, fmt.Sprintf("Sorry. <%s> is an unknown command or a module", in.Text()))
+	in.ResponseText(b, false, MF_CMD_UNKNOWN_SCommand.Format(in.Text()))
 }
