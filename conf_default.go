@@ -25,7 +25,7 @@ func (c *config) Default() {
 func (c *config) Validate() {
 	val := func(name, val, defaultVal string) string {
 		if val == "" {
-			c.logger.Warnf("Validation failed, override config, for <%s> <%s> -> <%s>", name, val, defaultVal)
+			c.logger.Warnf(MF_CONF_OVERRIDE_SName_SVal_SNewVal.Format(name, val, defaultVal))
 			return defaultVal
 		}
 		return val
