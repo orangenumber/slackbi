@@ -110,8 +110,8 @@ func (in *MsgIncoming) Response(sbi *SBI, module string, response *MsgOutgoing) 
 
 	if (out.Blocks == nil || len(out.Blocks) == 0) && out.Attachments == nil {
 		if len(response.Custom.Files) == 0 && out.Text == "" {
-			sbi.logger.Warnf("response doesn't have any message, incomingMsg.TS=%s", in.Event.TS)
-			return fmt.Errorf("response doesn't have any message, incomingMsg.TS=%s", in.Event.TS)
+			sbi.logger.Warnf(MF_MSG_RESP_EMPTY_SThread.Format(in.Event.TS))
+			return fmt.Errorf(MF_MSG_RESP_EMPTY_SThread.Format(in.Event.TS))
 		}
 
 		pwd, err := os.Getwd()
@@ -129,9 +129,9 @@ func (in *MsgIncoming) Response(sbi *SBI, module string, response *MsgOutgoing) 
 				return err
 			}
 			if err = os.Remove(file); err != nil {
-				sbi.logger.Errorf("uploaded but failed to delete, file=%s", file)
+				sbi.logger.Errorf(MF_MSG_RESP_FILE_DELETE_FAILED_SFile.Format(file))
 			} else {
-				sbi.logger.Debugf("uploaded and deleted, file=%s", file)
+				sbi.logger.Debugf(MF_MSG_RESP_FILE_UPLOADED_SFile.Format(file))
 			}
 		}
 
@@ -179,10 +179,10 @@ func (out *MsgOutgoing) Send(sbi *SBI) error {
 	var buf bytes.Buffer
 	_, err = io.Copy(&buf, resp.Body)
 	if err != nil {
-		sbi.logger.Errorf("sent request, error=%s", err.Error())
+		sbi.logger.Errorf(MF_MSG_SENT_BUT_ERROR_SErr.Format(err.Error()))
 		return err
 	}
-	sbi.logger.Tracef("sent request, received data=%s", buf.String())
+	sbi.logger.Tracef(MF_MSG_SENT_OK_SData.Format(buf.String()))
 
 	return nil
 }
@@ -199,7 +199,7 @@ func (out *MsgOutgoing) SendFile(sbi *SBI, filename string, ior io.Reader) error
 	if _, err := p.Send("POST", SLACK_ENDPOINT_FILE_UPLOAD, &buf); err != nil {
 		return err
 	}
-	sbi.logger.Tracef("sent request, received data=%s", buf.String())
+	sbi.logger.Tracef(MF_FILE_SENT_SData.Format(buf.String()))
 	return nil
 }
 
