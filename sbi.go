@@ -14,10 +14,10 @@ type SBI struct {
 }
 
 const (
-	SBI_VERSION                = "1.0.0 (2020-12-21)"
+	SBI_VERSION                = "0.0.6 (2020-12-31)"
 	SLACK_ENDPOINT_MSG         = "https://slack.com/api/chat.postMessage"
 	SLACK_ENDPOINT_FILE_UPLOAD = "https://slack.com/api/files.upload"
-	SYS_COMMAND                = "sys"
+	SYS_COMMAND                = "sys" // todo: let this be customizable from the config?
 )
 
 func New(c *config, logger aface.Logger1a) (*SBI, error) {

@@ -268,6 +268,7 @@ type MsgBlock struct {
 	ImageURL  string        `json:"image_url,omitempty"`
 	AltText   string        `json:"alt_text,omitempty"`
 }
+// todo: find a nice way to generate msg block easily + utilizing with a color maybe? need to add a method like ".Error(string)" that uses red color, etc.
 
 type MsgAccessory struct {
 	Type        string `json:"type,omitempty"`
@@ -333,3 +334,5 @@ type MsgText struct {
 	Text  string `json:"text,omitempty"`
 	Emoji bool   `json:"emoji,omitempty"`
 }
+
+// todo: comments needs to be updated to fit with godoc
