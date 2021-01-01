@@ -13,6 +13,7 @@ type config struct {
 	Logging    bool   `json:"logging"`
 	logger     aface.Logger1a
 	Service    struct {
+		SysCommand     string `json:"sys_command"`
 		Address        string `json:"address"`
 		Port           string `json:"port"`
 		Path           string `json:"path"`

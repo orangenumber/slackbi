@@ -34,9 +34,9 @@ const (
 	M_MOD_ERR_001  msg = "ERR-001: problem with the module."
 
 	// Message Formatted
+	MF_APP_SName_SVersion             msg = "%s: %s"
+	MF_SBI_SVersion                   msg = "SlackBotInterface: %s"
 	MF_HTTP_SERVING_SAddr_SPort_SPath msg = "Serving HTTP <%s%s%s>"
-	MF_SBI_SVersion                   msg = "SlackBotInterface %s"
-	MF_SBI_CREATING_SName_SVersion    msg = "Creating %s: %s"
 	MF_SLACK_BOT_CHALLENGE_SChallenge msg = "Received a slack bot challenge request; challenge=%s"
 
 	MF_MSG_UNMARSHAL_FAILED_SErr                   msg = "MSG received but can't unmarshal, err=%s"

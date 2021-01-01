@@ -9,6 +9,7 @@ const (
 	DEFAULT_SERVICE_ACCEPT_CHALLENGE = true
 	DEFAULT_MODULE_DIR               = "./modules"
 	DEFAULT_MODULE_CONF              = "config.json"
+	DEFAULT_SERVICE_SYS_COMMAND      = "sys"
 )
 
 func (c *config) Default() {
@@ -20,6 +21,7 @@ func (c *config) Default() {
 	c.Service.AcceptChallege = DEFAULT_SERVICE_ACCEPT_CHALLENGE
 	c.Module.Dir = DEFAULT_MODULE_DIR
 	c.Module.Conf = DEFAULT_MODULE_CONF
+	c.Service.SysCommand = DEFAULT_SERVICE_SYS_COMMAND
 }
 
 func (c *config) Validate() {
@@ -35,6 +37,7 @@ func (c *config) Validate() {
 	c.BotName = val("BotName", c.BotName, DEFAULT_BOT_NAME)
 	c.Service.Port = val("Service.Port", c.Service.Port, DEFAULT_SERVICE_PORT)
 	c.Service.Path = val("Service.Path", c.Service.Path, DEFAULT_SERVICE_PATH)
+	c.Service.SysCommand = val("Service.SysCommand", c.Service.SysCommand, DEFAULT_SERVICE_SYS_COMMAND)
 	c.Module.Dir = val("Module.Dir", c.Module.Dir, DEFAULT_MODULE_DIR)
 	c.Module.Conf = val("Module.Conf", c.Module.Conf, DEFAULT_MODULE_CONF)
 }

@@ -3,7 +3,7 @@ module github.com/orangenumber/slackbi/_cmd
 go 1.15
 
 require (
-	github.com/gonyyi/alog v0.2.0
+	github.com/gonyyi/alog v0.2.1
 	github.com/gonyyi/graceful v0.0.1
 	github.com/gonyyi/rotatew v0.0.3
 	github.com/orangenumber/slackbi v0.0.6

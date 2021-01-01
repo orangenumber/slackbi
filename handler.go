@@ -34,7 +34,7 @@ func (b *SBI) serve() error {
 				// If the command starts with "sys" (SYS_COMMAND), intercept that.
 				// To avoid modules starting with sys such as `@shorty sysabc` type,
 				// but allows `@shorty sys`, this will lowercase all chars, then split it first.
-				if strings.Split(strings.ToLower(msg_received.Text()), " ")[0] == SYS_COMMAND {
+				if strings.Split(strings.ToLower(msg_received.Text()), " ")[0] == b.config.Service.SysCommand {
 					// THIS CALLS FOR SYS
 					// TODO: if func not nil, run it, otherwise, say sys command not set.
 

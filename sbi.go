@@ -17,7 +17,6 @@ const (
 	SBI_VERSION                = "0.0.6 (2020-12-31)"
 	SLACK_ENDPOINT_MSG         = "https://slack.com/api/chat.postMessage"
 	SLACK_ENDPOINT_FILE_UPLOAD = "https://slack.com/api/files.upload"
-	SYS_COMMAND                = "sys" // todo: let this be customizable from the config?
 )
 
 func New(c *config, logger aface.Logger1a) (*SBI, error) {
@@ -36,7 +35,7 @@ func New(c *config, logger aface.Logger1a) (*SBI, error) {
 	}
 
 	b.logger.Infof(MF_SBI_SVersion.Format(SBI_VERSION))
-	b.logger.Infof(MF_SBI_CREATING_SName_SVersion.Format(b.config.BotName, b.config.BotVersion))
+	b.logger.Infof(MF_APP_SName_SVersion.Format(b.config.BotName, b.config.BotVersion))
 
 	b.config.Validate()
 
@@ -61,6 +60,10 @@ func (b *SBI) Run() error {
 		}
 		b.modules = m
 	}
-	b.logger.Infof(MF_HTTP_SERVING_SAddr_SPort_SPath.Format(b.config.Service.Address, b.config.Service.Port, b.config.Service.Path))
+	b.logger.Infof(
+		MF_HTTP_SERVING_SAddr_SPort_SPath.Format(
+			b.config.Service.Address,
+			b.config.Service.Port,
+			b.config.Service.Path))
 	return b.serve()
 }
