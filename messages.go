@@ -171,6 +171,9 @@ func (out *MsgOutgoing) JSON() []byte {
 	return payload
 }
 func (out *MsgOutgoing) Send(sbi *SBI) error {
+	if out.Custom.ReplyInThread == false {
+		out.ThreadTs = ""
+	}
 	payload, err := json.Marshal(out)
 	if err != nil {
 		return err
@@ -258,9 +261,11 @@ func (blo *MsgBlocks) AddMarkdown(markdown string) {
 		},
 	})
 }
+
 func (blo *MsgBlocks) AddDivider() {
 	*blo = append(*blo, MsgBlock{Type: "divider"})
 }
+
 func (blo *MsgBlocks) AddContext(msgEle ...MsgElement) {
 	*blo = append(*blo, MsgBlock{
 		Type:     "context",

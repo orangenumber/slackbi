@@ -1,4 +1,4 @@
-package module
+package slackbi
 
 import "os"
 
@@ -36,7 +36,7 @@ const (
 )
 
 func CheckFilePerm(mode os.FileMode) bool {
-	if mode&OS_ALL_R == OS_ALL_R && mode&OS_ALL_X == OS_ALL_X {
+	if mode&OS_USER_R == OS_USER_R && mode&OS_USER_X == OS_USER_X {
 		return true
 	}
 	return false

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/gonyyi/afmt"
 	"runtime"
+	"sort"
+	"strings"
 	"time"
 )
 
@@ -19,6 +21,16 @@ import (
 //    6. show current version information
 func (b *SBI) sysCommand(in MsgIncoming) {
 	switch in.TextNorm() {
+	case "sys":
+		in.ResponseMarkdown(b, false, syscmdHelp(b))
+	case "sys mod":
+		in.ResponseText(b, false, syscmdMod(b))
+	case "sys mod refresh", "sys mod reload", "sys mod load":
+		if err := modRefresh(b); err != nil {
+			in.ResponseTextf(b, false, "Mod reload failed, err=%s", err.Error())
+		} else {
+			in.ResponseTextf(b, false, "Mod reloaded: %d modules loaded", len(b.modules.Items))
+		}
 	case "sys time", "sys date", "sys what time is it", "sys what time is it?":
 		in.ResponseText(b, false, syscmdTime())
 	case "sys mem", "sys memory", "sys ram":
@@ -38,6 +50,34 @@ func (b *SBI) sysCommand(in MsgIncoming) {
 		in.ResponseText(b, false,
 			"unrecognized command")
 	}
+}
+
+func modRefresh(b *SBI) error {
+	return b.modules.Load()
+}
+
+func modListing(b *SBI) []string {
+	var out []string
+	for name, v := range b.modules.Items {
+		out = append(out, fmt.Sprintf("%s: %s", name, v.Info.Name))
+	}
+	return out
+}
+
+func syscmdMod(b *SBI) string {
+	listing := modListing(b)
+	sort.Strings(listing)
+	out := "```"
+	out += strings.Join(listing, "\n")
+	return out + b.modules.lastRefresh.Format("\n(Last module indexing: 01/02/2006 15:04:05)```")
+}
+
+func syscmdHelp(b *SBI) string {
+	lastRefreshAgo := time.Now().Sub(b.modules.lastRefresh)
+	return "```" + mf_sbi_sVersion.Format(SBI_VERSION) + "\n" +
+		mf_app_sName_sVersion.Format(b.config.BotName, b.config.BotVersion) + "\n" +
+		"Last module indexing: " + b.modules.lastRefresh.Format("01/02/2006 15:04:05") + " (" + lastRefreshAgo.String() + " ago)\n" +
+		"```"
 }
 
 func syscmdTime() string {

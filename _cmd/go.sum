@@ -1,10 +1,10 @@
 github.com/gonyyi/aface v0.0.2 h1:JaHSsnHT3j+huql+hE3sONMgyaZQNd0nZExZLXzjDmA=
 github.com/gonyyi/aface v0.0.2/go.mod h1:qIQDfiDavbJaMGmfcmVhJj16queDCCzaH/Yoy0t0tHY=
-github.com/gonyyi/alog v0.3.0 h1:SxssN9hW/VYN3mUj6MqWm9IoidC8GJFWC4zREunZVcs=
-github.com/gonyyi/alog v0.3.0/go.mod h1:SkFUZ5iiFs2FA1E5RgDXQNOWOhxqsK2sU2FVgRNP7mM=
+github.com/gonyyi/afmt v1.0.0 h1:1RzJm7JAbNnzC14+NrF/rvqFPI4lqHjx8usdeL2uGK8=
+github.com/gonyyi/afmt v1.0.0/go.mod h1:Tb6/vglQ1VXRZmNyPv9mBh0yQZ6m645SXF9ZUmIEx4s=
+github.com/gonyyi/alog v0.3.1 h1:eUqfKnGQOwVjaYcYj7YIcmke0TZ8CSj/tURIVkzbAmw=
+github.com/gonyyi/alog v0.3.1/go.mod h1:SkFUZ5iiFs2FA1E5RgDXQNOWOhxqsK2sU2FVgRNP7mM=
 github.com/gonyyi/arotw v0.0.0-20210104010619-8dce7193e651 h1:H4J4sxc/bICQOPhQ7H+kFPJXkSE0YFoBoN3SCwEi/h4=
 github.com/gonyyi/arotw v0.0.0-20210104010619-8dce7193e651/go.mod h1:RqyigszDN7M4y6H9OYBQDgYfIme3IdOUIZQ/mSN6ZzI=
 github.com/gonyyi/graceful v0.0.1 h1:lSg5ZyyLH1qHBfxgDgWg6A2JN+dAXx9kUZmr0BM7IbM=
 github.com/gonyyi/graceful v0.0.1/go.mod h1:brvStqSRVZ28TKZdfBC60ydVQ1KvAchLE2s6WKU6k1w=
-github.com/orangenumber/slackbi v0.0.6 h1:KlGcuBjPmslfpisLsSOxLhbXbstvZUtdHE76JwrAsM0=
-github.com/orangenumber/slackbi v0.0.6/go.mod h1:hUN5PkmVSBtOJafdia3UHeKROgguYUiJRT8X/I8txUU=

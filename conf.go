@@ -23,6 +23,7 @@ type config struct {
 		Dir  string `json:"directory"`
 		Conf string `json:"config_filename"`
 	} `json:"module"`
+	Admin map[string]string `json:"admin"` // map[ID] = note
 }
 
 func (c *config) Save(filename string) error {
@@ -33,24 +34,5 @@ func (c *config) Save(filename string) error {
 	if err = ioutil.WriteFile(filename, j, 0755); err != nil {
 		return err
 	}
-
 	return nil
-}
-
-func NewConfig() *config {
-	c := config{}
-	c.Default()
-	return &c
-}
-
-func ReadConfig(filename string) (*config, error) {
-	if b, err := ioutil.ReadFile(filename); err != nil {
-		return nil, err
-	} else {
-		c := config{}
-		if err := json.Unmarshal(b, &c); err != nil {
-			return nil, err
-		}
-		return &c, nil
-	}
 }

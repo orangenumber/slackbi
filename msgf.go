@@ -4,13 +4,6 @@ import (
 	"fmt"
 )
 
-// msg/msge is from github.com/gonyyi/tmp/anerr
-type msge string
-
-func (e msge) String() string {
-	return string(e)
-}
-
 type msg string
 
 func (m msg) String() string {
@@ -22,29 +15,31 @@ func (m msg) Error() string { // to meet error interface
 func (m msg) Format(a ...interface{}) string {
 	return fmt.Sprintf(m.String(), a...)
 }
-func (m msg) Errorf(a ...interface{}) msge {
-	return msge(m.Format(a...))
+func (m msg) Errorf(a ...interface{}) msg {
+	return msg(m.Format(a...))
 }
 
 const (
 	// Message
-	M_SYSF_UPDATED msg = "sysf has been updated"
-	M_SYSF_INVALID msg = "invalid sysf function"
-	M_HTTP_RESP_OK msg = "ok"
-	M_MOD_ERR_001  msg = "ERR-001: problem with the module."
+	m_http_resp_ok msg = "ok"
+	m_mod_err_001  msg = "ERR-001: problem with the module."
+	m_config_empty msg = "config empty"
+
+	mf_config_read_err_sErr msg = "cannot open config, err=%s"
+	m_sbi_ptr_error         msg = "sbi not initiated correctly"
 
 	// Message Formatted
-	MF_APP_SName_SVersion             msg = "%s: %s"
-	MF_SBI_SVersion                   msg = "SlackBotInterface: %s"
-	MF_HTTP_SERVING_SAddr_SPort_SPath msg = "Serving HTTP <%s%s%s>"
-	MF_SLACK_BOT_CHALLENGE_SChallenge msg = "Received a slack bot challenge request; challenge=%s"
+	mf_app_sName_sVersion             msg = "%s: %s"
+	mf_sbi_sVersion                   msg = "SlackBotInterface: %s"
+	mf_http_serving_sAddr_sPort_sPath msg = "Serving HTTP <%s%s%s>"
+	mf_slack_bot_challenge_sChallenge msg = "Received a slack bot challenge request; challenge=%s"
 
-	MF_MSG_UNMARSHAL_FAILED_SErr                   msg = "MSG received but can't unmarshal, err=%s"
-	MF_MSG_UNMARSHAL_FAILED_SErr_SData             msg = "MSG received but can't unmarshal, err=%s, data=%s"
-	MF_MSG_RECEIVED_SFrom_SMsg_SThread             msg = "MSG msg_received, From=%s, msg=%s, Thread=%s"
-	MF_MSG_RECEIVED_IGNORE_SThread_SBotID_SSubType msg = "MSG msg_received but ignored, TS=%s, BotID=%s, SubType=%s"
-	MF_MSG_READ_FAILED_SErr                        msg = "MSG received but failed to read, err=%s"
-	MF_MSG_RECEIVED_SData                          msg = "Received a call, data=%s"
+	mf_msg_unmarshal_failed_sErr                   msg = "MSG received but can't unmarshal, err=%s"
+	mf_msg_unmarshal_failed_sErr_sData             msg = "MSG received but can't unmarshal, err=%s, data=%s"
+	mf_msg_received_sFrom_sMsg_sThread             msg = "MSG msg_received, From=%s, msg=%s, Thread=%s"
+	mf_msg_received_ignore_sThread_sBotID_sSubtype msg = "MSG msg_received but ignored, TS=%s, BotID=%s, SubType=%s"
+	mf_msg_read_failed_sErr                        msg = "MSG received but failed to read, err=%s"
+	mf_msg_received_sData                          msg = "Received a call, data=%s"
 
 	MF_MSG_RESP_EMPTY_SThread            msg = "response doesn't have any message, incomingMsg.TS=%s"
 	MF_MSG_RESP_FILE_DELETE_FAILED_SFile msg = "uploaded but failed to delete, file=%s"
@@ -60,6 +55,7 @@ const (
 
 	MF_MOD_DELAYED_RESP_SAvgSec                         msg = "Wait.. average runtime for this module is %d seconds."
 	MF_MOD_OUTPUT_SData                                 msg = "output=%s"
+	mf_mod_not_found_sName                              msg = "module %s not found"
 	MF_MOD_ERR_001_SErr                                 msg = "ERR-001: err=%s"
 	MF_MOD_ERR_002_SErr                                 msg = "ERR-002: *MsgIncoming.ResponseText(), err=%s"
 	MF_MOD_ERR_JSON_SErr                                msg = "in.JSON() failed, err= %s"

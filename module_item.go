@@ -1,4 +1,4 @@
-package module
+package slackbi
 
 import (
 	"encoding/json"

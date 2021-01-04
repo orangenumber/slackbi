@@ -2,6 +2,7 @@ package slackbi
 
 import (
 	"encoding/json"
+	"fmt"
 	"strings"
 )
 
@@ -14,21 +15,16 @@ func (b *SBI) command(in MsgIncoming) {
 
 	oops := func(err error) {
 		b.logger.Errorf(MF_MOD_ERR_001_SErr.Format(err.Error()))
-		if err = in.ResponseText(b, false, M_MOD_ERR_001.String()); err != nil {
+		if err = in.ResponseText(b, false, m_mod_err_001.String()); err != nil {
 			b.logger.Errorf(MF_MOD_ERR_002_SErr.Format(err.Error()))
 		}
 	}
 
 	// Split first word and check if exists in modules
 	moduleName := strings.Split(txt, " ")[0]
-	if b.modules.IsExist(moduleName) {
-		module, err := b.modules.Get(moduleName)
-		if err != nil {
-			oops(err)
-			return
-		}
-
+	if module, err := b.modules.Get(moduleName); err == nil {
 		outmsg := in.OutgoingMsg(b)
+		outmsg.Custom.ReplyInThread = false
 
 		if module.Module.AvgRuntimeSec == 0 {
 			module.Module.AvgRuntimeSec = 1
@@ -46,16 +42,16 @@ func (b *SBI) command(in MsgIncoming) {
 				return
 			}
 			if len(output) > 0 {
-				outmsg.Blocks.AddMarkdown(string(output))
+				outmsg.Blocks.AddMarkdown("```" + string(output) + "```")
 			}
 			if len(outputError) > 0 {
 				outmsg.Blocks.AddDivider()
 				tmpME := MsgElement{}
 				tmpME.AsMarkdown("```" + string(outputError) + "```")
 				outmsg.Blocks.AddContext(tmpME)
-				outmsg.Send(b)
-				b.logger.Tracef(MF_MOD_OUTPUT_SData.Format(string(outmsg.JSON())))
 			}
+			outmsg.Send(b)
+			b.logger.Tracef(MF_MOD_OUTPUT_SData.Format(string(outmsg.JSON())))
 
 		default:
 			// module 2 is default
@@ -95,7 +91,7 @@ func (b *SBI) command(in MsgIncoming) {
 			}
 		}
 	} else {
-		b.Help(&in)
+		in.ResponseText(b, false, fmt.Sprintf("Module <%s> not found", moduleName))
 	}
 }
 

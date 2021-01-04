@@ -1,0 +1,20 @@
+{
+   "module": {
+      "interface_version": 1,
+      "entry_point": "test.py",
+      "avg_runtime_sec": 0
+   },
+   "info": {
+      "name": "ModuleTest",
+      "version": "v0.1.1",
+      "created": "Gon Yi",
+      "last-modified": "",
+      "contacts": null
+   },
+   "help": {
+      "intro": "",
+      "website": "",
+      "help": null,
+      "usage": null
+   }
+}
