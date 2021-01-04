@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/gonyyi/alog"
+	"github.com/gonyyi/arotw"
 	"github.com/gonyyi/graceful"
-	"github.com/gonyyi/rotatew"
 	"github.com/orangenumber/slackbi"
 	"os"
 )
@@ -11,8 +11,12 @@ import (
 func main() {
 	// BASIC THING: crate a logger, and writer, graceful
 	log := alog.New(os.Stderr)
-	r, err := rotatew.New("./log/sbi-shorty{-2006-0102}.log", rotatew.KB*128, rotatew.O_DEFAULT|rotatew.O_REMOVE_OLD_LOG)
-	log.SetOutput(r).Do(alog.DoColor)
+	r, err := arotw.New("./log/sbi-shorty{-2006-0102}.log", func(rw *arotw.Writer) {
+		rw.SetKeepLogs(5)
+		rw.SetMaxSize(arotw.MB * 10)
+	})
+
+	log.SetOutput(r).Do(alog.DoColor()).SetLevel(alog.Ltrace)
 	log.IfFatal(err)
 
 	graceful.New(func() {

@@ -61,9 +61,16 @@ func (in *MsgIncoming) JSON() ([]byte, error) {
 	return json.Marshal(in)
 }
 
+// Text removes mention(eg. @gonyi).
 func (in *MsgIncoming) Text() string {
 	return strings.TrimSpace(RemoveMention(in.Event.Text))
 }
+
+// TextNorm returns normalized text (lowercase)
+func (in *MsgIncoming) TextNorm() string {
+	return strings.ToLower(strings.TrimSpace(RemoveMention(in.Event.Text)))
+}
+
 func (in *MsgIncoming) TextRaw() string {
 	return in.Event.Text
 }
@@ -83,6 +90,10 @@ func (in *MsgIncoming) ResponseText(sbi *SBI, useThread bool, text string) error
 	}
 	out.Text = text
 	return out.Send(sbi)
+}
+
+func (in *MsgIncoming) ResponseTextf(sbi *SBI, useThread bool, format string, a ...interface{}) error {
+	return in.ResponseText(sbi, useThread, fmt.Sprintf(format, a...))
 }
 
 func (in *MsgIncoming) ResponseMarkdown(sbi *SBI, useThread bool, text string) error {
@@ -268,6 +279,7 @@ type MsgBlock struct {
 	ImageURL  string        `json:"image_url,omitempty"`
 	AltText   string        `json:"alt_text,omitempty"`
 }
+
 // todo: find a nice way to generate msg block easily + utilizing with a color maybe? need to add a method like ".Error(string)" that uses red color, etc.
 
 type MsgAccessory struct {

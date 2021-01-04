@@ -1,2 +1,4 @@
 github.com/gonyyi/aface v0.0.2 h1:JaHSsnHT3j+huql+hE3sONMgyaZQNd0nZExZLXzjDmA=
 github.com/gonyyi/aface v0.0.2/go.mod h1:qIQDfiDavbJaMGmfcmVhJj16queDCCzaH/Yoy0t0tHY=
+github.com/gonyyi/afmt v1.0.0 h1:1RzJm7JAbNnzC14+NrF/rvqFPI4lqHjx8usdeL2uGK8=
+github.com/gonyyi/afmt v1.0.0/go.mod h1:Tb6/vglQ1VXRZmNyPv9mBh0yQZ6m645SXF9ZUmIEx4s=
